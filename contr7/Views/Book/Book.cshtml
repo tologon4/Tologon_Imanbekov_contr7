@@ -6,7 +6,7 @@
 }
 
 <div class="row row-cols-2">
-    <div class="col ">
+    <div class="col col-6">
         <div class="card h-100 text-start px-1 pt-1 border-0 bg-light ">
             <div class="my-auto mx-auto w-50">
                 <img src="@Model.ImagePath" alt="person3-photo" class="w-100 img-fluid">
@@ -30,7 +30,23 @@
             </div>
         </div>
     </div>
-    <div class="col">
+    <div class="col col-6">
+        <form asp-action="Order" asp-controller="Order" method="post">
+            <div class="card w-100 mt-5" style="width: 16rem;">
+                <div class="card-body mt-5 m-auto">
+                    <h5 class="card-title"> Вы берете книгу @Model.Name</h5>
+                    <h5 class="card-title"> Автор : @Model.Autor</h5>
+                </div>
+                <div class="card-footer border-0 bg-transparent text-center px-0">
+                    <label for="email">Введите email для получения книги <br/><span class="text-danger ms-2">@ViewBag.ErrorMessage</span></label>
+                    <div class="input-group">
+                        <input name="email" type="text" class="form-control rounded-1  mt-3" required="required" placeholder="введите название" id="email">
+                        <input name="id" value="@Model.Id" type="hidden"/>
+                    </div>
+                    <button  type="submit" class="btn btn-warning rounded-0 px-3 py-2 ">Получить</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 

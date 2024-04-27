@@ -28,7 +28,6 @@ public class BookController : Controller
             Books = items
         };
         return View(bivm);
-        
     }
 
     public IActionResult Create()
@@ -87,13 +86,15 @@ public class BookController : Controller
             }
             _context.Books.Update(book);
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Book", new {id = book.Id});
         }
         return View(book);
     }
 
-    public IActionResult Book(int id)
+    public IActionResult Book(int id, string error)
     {
-        return View(_context.Books.Include(c => c.Category).FirstOrDefault(b => b.Id == id));
+        ViewBag.ErrorMessage = error;
+        Book book = _context.Books.Include(c => c.Category).FirstOrDefault(b => b.Id == id);
+        return View(book);
     }
 }

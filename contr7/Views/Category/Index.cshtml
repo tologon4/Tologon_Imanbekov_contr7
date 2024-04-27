@@ -1,0 +1,54 @@
+@model Category
+@{
+    ViewBag.Title = "Categories";
+    Layout = "_Layout";
+}
+
+<h2>Категории</h2>
+<div class="row ">
+    <div class="col col-8 table_section">
+        @if (@ViewBag.CategoryList.Count == 0)
+        {
+            <p>Пока что, категорий еще нет!</p>
+        }
+        else
+        {
+            <table class="table table-light table-striped">
+                <thead>
+                <tr>
+                    <th>Индекс</th>
+                    <th>Категория</th>
+                    <th></th>
+                </tr>            
+                </thead>
+                <tbody>
+                @foreach (var category in @ViewBag.CategoryList)
+                {
+                    <tr>
+                        <td>@category.Id</td>
+                        <td>@category.Name</td>
+                        <td><a class="btn btn-danger" asp-action="Delete" asp-route-id="@category.Id">Удалить</a></td>
+                    </tr>
+                }            
+                </tbody>
+            </table>
+        }
+    </div>
+    <div class="col col-4">
+        @Html.ValidationSummary(true)
+        <form asp-action="Index" method="post" class="connection-form">
+            <div class="form_row">
+                <label for="">Название<input asp-for="Name" type="text" class="form-control form-control-lg rounded-1">
+                    <span class="text-danger" asp-validation-for="Name"></span></label>
+            </div>
+            <button type="submit" class="btn btn-success mt-5">Добавить</button>
+        </form>
+    </div>
+    
+</div>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

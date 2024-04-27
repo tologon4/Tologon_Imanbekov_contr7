@@ -17,6 +17,9 @@ public class Book
     [Range(int.MinValue, 2024, ErrorMessage = "Год не может быть в будущем!")]
     public int ReleaseYear { get; set; }
     public string? Description { get; set; }
+    [Required(ErrorMessage = "Заполните ячейку")]
+    public int? CategoryId { get; set; }
+    public Category? Category { get; set; }
     public DateTime? AddedDate { get; set; }
     public DateTime? EditedDate { get; set; }
 }

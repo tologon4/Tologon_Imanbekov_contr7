@@ -1,5 +1,6 @@
 using contr7.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace contr7.Controllers;
 
@@ -14,19 +15,31 @@ public class BookController : Controller
         _environment = environment;
     }
     // GET
-    public IActionResult Index()
+    public IActionResult Index(int page =1)
     {
-        return View(_context.Books.ToList());
+        IQueryable<Book> books = _context.Books;
+        int pageSize = 2;
+        int count = books.Count();
+        var items = books.Skip((page - 1) * pageSize).Take(pageSize);
+        PageViewModel pvm = new PageViewModel(count, page, pageSize);
+        BookIndexViewModel bivm = new BookIndexViewModel()
+        {
+            PageViewModel = pvm,
+            Books = items
+        };
+        return View(bivm);
+        
     }
 
     public IActionResult Create()
     {
+        ViewBag.Categories = _context.Categories.ToList();
         return View();
     }
     [HttpPost]
     public async Task<IActionResult> Create(Book? book, IFormFile? uploadedFile)
     {
-        
+        ViewBag.Categories = _context.Categories.ToList();
         if (ModelState.IsValid)
         {
             book.AddedDate = DateTime.UtcNow;
@@ -50,13 +63,16 @@ public class BookController : Controller
 
     public IActionResult Edit(int id)
     {
+        ViewBag.Categories = _context.Categories.ToList();
         return View(_context.Books.FirstOrDefault(b => b.Id == id));
     }
 
     [HttpPost]
     public async Task<IActionResult> Edit(Book? book, IFormFile? uploadedFile)
     {
+        ViewBag.Categories = _context.Categories.ToList();
         book.AddedDate = book.AddedDate.Value.ToUniversalTime();
+        book.EditedDate = DateTime.UtcNow;
         if (ModelState.IsValid)
         {
             if (uploadedFile != null)
@@ -78,6 +94,6 @@ public class BookController : Controller
 
     public IActionResult Book(int id)
     {
-        return View(_context.Books.FirstOrDefault(b => b.Id == id));
+        return View(_context.Books.Include(c => c.Category).FirstOrDefault(b => b.Id == id));
     }
 }

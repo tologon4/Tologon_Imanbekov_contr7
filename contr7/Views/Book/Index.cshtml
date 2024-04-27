@@ -1,4 +1,4 @@
-@model List<Book>
+@model BookIndexViewModel
 
 @{
     ViewBag.Title = "title";
@@ -8,30 +8,36 @@
 <h2>Книги</h2>
 <div class="container-xxl">
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mt-5">
-        @if (@Model.Count == 0)
+        @if (@Model.Books.Count() == 0)
         {
             <h3 class="text-center text-danger"> Список книг пуст</h3>
         }
         else
         {
-            @foreach (var book in @Model)
+            @foreach (var book in @Model.Books)
             {
-                <div class="col mb-4">
-                    <div class="card h-100 text-start px-1 pt-1 border-0 bg-light ">
-                        <div class="my-auto mx-auto w-100">
-                            <img src="@book.ImagePath" alt="person3-photo" class="w-100 img-fluid">
-                        </div>
-                        <div class="mx-2 my-auto">
-                            <p class="list-text mt-auto">@book.Name</p>
-                            <p class="list-text mt-auto">Автор : @book.Autor</p>
-                            <p class="list-text mt-auto">Статус : @book.Status</p>
-                        </div>
-                        <div class="card-footer border-0 bg-transparent text-center px-0">
-                             <a asp-controller="Book" asp-action="Book" asp-route-id="@book.Id" type="button" class="btn btn-warning rounded-0 px-3 py-2 ">Детали</a>
-                        </div>
+                <div class="card mx-auto" style="width: 16rem;">
+                    <img src="@book.ImagePath" class="card-img-top" alt="photo">
+                    <div class="card-body mt-2 m-auto">
+                        <h5 class="card-title">@book.Name</h5>
+                        <p class="card-text">Автор : @book.Autor</p>
+                        <p class="list-text mt-auto"> Статус : @book.Status</p>
+                    </div>
+                    <div class="card-footer border-0 bg-transparent text-center px-0">
+                        <a asp-action="Book" asp-controller="Book" asp-route-id="@book.Id" class="btn btn-warning" role="button">Детали</a>
                     </div>
                 </div>
             }
         }
+        
     </div>
+    <div class="row">
+        <div class="col col-4 mx-auto mt-3 text-center">
+            @if (Model.PageViewModel.HasPreviousPage)
+            { <a class="btn btn-primary me-4" asp-action="Index" asp-route-page="@(Model.PageViewModel.PageNumber - 1)"> Предыдущий </a> }
+            @if (Model.PageViewModel.HasNextPage)
+            { <a class="btn btn-primary ms-4" asp-action="Index" asp-route-page="@(Model.PageViewModel.PageNumber + 1)">Следующий</a> }
+        </div>
+    </div>
+    
 </div>

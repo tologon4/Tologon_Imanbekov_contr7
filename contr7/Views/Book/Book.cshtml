@@ -11,12 +11,17 @@
             <div class="my-auto mx-auto w-50">
                 <img src="@Model.ImagePath" alt="person3-photo" class="w-100 img-fluid">
             </div>
-            <div class="mx-2 my-auto">
+            <div class="mx-2 my-auto fs-4">
                 <p class="list-text mt-auto">@Model.Name</p>
                 <p class="list-text mt-auto">Автор : @Model.Autor</p>
                 <p class="list-text mt-auto">Статус : @Model.Status</p>
                 <p class="list-text mt-auto">Год выпуска : @Model.ReleaseYear</p>
+                <p class="list-text mt-auto">Категория : @Model.Category.Name</p>
                 <p class="list-text mt-auto">Время добавления : @Model.AddedDate</p>
+                @if (@Model.EditedDate != null)
+                {
+                    <p class="list-text mt-auto">Время добавления : @Model.EditedDate</p>
+                }
             </div>
             <div class="card-footer border-0 bg-transparent text-center px-0">
                 <div class="card-footer border-0 bg-transparent text-center px-0">

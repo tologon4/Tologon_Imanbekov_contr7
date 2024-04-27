@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using contr7.Models;
+using contr7.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -40,8 +41,9 @@ public class AccountController : Controller
         _context.SaveChanges();
         return RedirectToAction("Cabinet");
     }
-    public IActionResult Cabinet(int page=1)
+    public IActionResult Cabinet(string name, string autor, string status, BookSortState sortState = BookSortState.NameAsc, int page=1)
     {
+        ViewBag.Statuses = new List<string>() { "В наличии", "Выдана"};
         var userName = User.Identity.Name;
         User user = _context.Users.FirstOrDefault(u => u.Name == userName);
         List<Book> books = new List<Book>();
@@ -49,6 +51,45 @@ public class AccountController : Controller
         foreach (var orderV in orders)
             if (orderV.UserId == user.Id)
                 books.Add(orderV.Book);
+        if (!string.IsNullOrEmpty(name))
+        {
+            books = books.Where(b => b.Name==name).ToList();
+        }
+        if (!string.IsNullOrEmpty(status))
+        {
+            books = books.Where(b => b.Status==status).ToList();
+        }
+        if (!string.IsNullOrEmpty(autor))
+        {
+            books = books.Where(b => b.Autor == autor).ToList();
+        }
+        ViewBag.NameSort = sortState==BookSortState.NameAsc ? BookSortState.NameDesc : BookSortState.NameAsc;
+        ViewBag.AutorSort = sortState == BookSortState.AutorAsc ? BookSortState.AutorDesc: BookSortState.AutorAsc;
+        ViewBag.StatusSort = sortState == BookSortState.StatusAsc ? BookSortState.StatusDesc : BookSortState.StatusAsc;
+        switch (sortState)
+        {
+            case BookSortState.NameAsc:
+                books = books.OrderBy(t => t.Name).ToList();
+                break;
+            case BookSortState.NameDesc:
+                books = books.OrderByDescending(t => t.Name).ToList();
+                break;
+            case BookSortState.AutorAsc:
+                books = books.OrderBy(t => SortFields(t.Autor)).ToList();
+                break;
+            case BookSortState.AutorDesc:
+                books = books.OrderByDescending(t => SortFields(t.Autor)).ToList();
+                break;
+            case BookSortState.StatusAsc:
+                books = books.OrderBy(t => SortFields(t.Status)).ToList();
+                break;
+            case BookSortState.StatusDesc:
+                books = books.OrderByDescending(t => SortFields(t.Status)).ToList();
+                break;
+            default:
+                books = books.OrderBy(t => t.Name).ToList();
+                break;
+        }
         int pageSize = 2;
         int count = books.Count();
         var items = books.Skip((page - 1) * pageSize).Take(pageSize);
@@ -125,5 +166,17 @@ public class AccountController : Controller
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Login", "Account");
+    }
+    private int SortFields(string field)
+    {
+        switch (field.ToLower())
+        {
+            case "В наличии":
+                return 2;
+            case "Выдана":
+                return 1;
+            default:
+                return 0;
+        }
     }
 }

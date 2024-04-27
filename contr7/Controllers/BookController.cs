@@ -1,5 +1,6 @@
 using contr7.Models;
 using contr7.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ public class BookController : Controller
         _environment = environment;
     }
     // GET
+    [Authorize(Roles = "admin, user")] 
     public IActionResult Index(string name, string autor, string status, BookSortState sortState = BookSortState.NameAsc, int page =1)
     {
         ViewBag.Statuses = new List<string>() { "В наличии", "Выдана"};
@@ -71,6 +73,7 @@ public class BookController : Controller
         return View(bivm);
     }
 
+    [Authorize(Roles = "admin, user")] 
     public IActionResult Given(string name, string status, string autor, BookSortState sortState = BookSortState.NameAsc, int page=1)
     {
         ViewBag.Statuses = new List<string>() { "В наличии", "Выдана"};
@@ -134,6 +137,7 @@ public class BookController : Controller
         return View();
     }
     [HttpPost]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> Create(Book? book, IFormFile? uploadedFile)
     {
         ViewBag.Categories = _context.Categories.ToList();
@@ -157,7 +161,7 @@ public class BookController : Controller
         }
         return View(book);
     }
-
+    [Authorize(Roles = "admin")] 
     public IActionResult Edit(int id)
     {
         ViewBag.Categories = _context.Categories.ToList();
@@ -165,6 +169,7 @@ public class BookController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> Edit(Book? book, IFormFile? uploadedFile)
     {
         ViewBag.Categories = _context.Categories.ToList();
@@ -188,7 +193,7 @@ public class BookController : Controller
         }
         return View(book);
     }
-
+    [Authorize(Roles = "admin, user")] 
     public IActionResult Book(int id, string error)
     {
         ViewBag.ErrorMessage = error;

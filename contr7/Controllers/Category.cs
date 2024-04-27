@@ -1,4 +1,5 @@
 using contr7.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace contr7.Controllers;
@@ -25,6 +26,7 @@ public class Category : Controller
     }
     
     [HttpPost]
+    [Authorize(Roles = "admin")] 
     public IActionResult Index(Models.Category category)
     {
         if (ModelState.IsValid)

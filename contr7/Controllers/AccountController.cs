@@ -2,7 +2,9 @@ using System.Security.Claims;
 using contr7.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace contr7.Controllers;
@@ -14,6 +16,7 @@ public class AccountController : Controller
     public AccountController(BookContext context)
     {
         _context = context;
+        
     }
     [HttpGet]
     public IActionResult Login()
@@ -21,10 +24,41 @@ public class AccountController : Controller
         return View();
     }
 
-    public IActionResult Cabinet()
+    public IActionResult Give(int id)
     {
-        _context.Users.FirstOrDefaultAsync();
-        return View();
+        var userName = User.Identity.Name;
+        User user = _context.Users.FirstOrDefault(u => u.Name == userName);
+        List<Book> books = new List<Book>();
+        List<Order> orders = _context.Orders.Include(o => o.Book).ToList();
+        foreach (var orderV in orders)
+            if (orderV.UserId == user.Id)
+                books.Add(orderV.Book);
+        Book book = books.FirstOrDefault(b => b.Id ==id);
+        Order order = _context.Orders.FirstOrDefault(o => o.BookId == book.Id && o.UserId == user.Id);
+        _context.Orders.Remove(order);
+        book.Status = "В наличии";
+        _context.SaveChanges();
+        return RedirectToAction("Cabinet");
+    }
+    public IActionResult Cabinet(int page=1)
+    {
+        var userName = User.Identity.Name;
+        User user = _context.Users.FirstOrDefault(u => u.Name == userName);
+        List<Book> books = new List<Book>();
+        List<Order> orders = _context.Orders.Include(o => o.Book).ToList();
+        foreach (var orderV in orders)
+            if (orderV.UserId == user.Id)
+                books.Add(orderV.Book);
+        int pageSize = 2;
+        int count = books.Count();
+        var items = books.Skip((page - 1) * pageSize).Take(pageSize);
+        PageViewModel pvm = new PageViewModel(count, page, pageSize);
+        BookIndexViewModel bivm = new BookIndexViewModel()
+        {
+            PageViewModel = pvm,
+            Books = items
+        };
+        return View(bivm);
     }
     
     [HttpPost]

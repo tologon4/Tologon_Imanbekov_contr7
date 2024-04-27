@@ -1,0 +1,44 @@
+@model BookIndexViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Книги</h2>
+<div class="container-xxl">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mt-5">
+        @if (@Model.Books.Count() == 0)
+        {
+            <h3 class="text-center text-danger"> Список книг пуст</h3>
+        }
+        else
+        {
+            @foreach (var book in @Model.Books)
+            {
+                <div class="card mx-auto" style="width: 16rem;">
+                    <img src="@book.ImagePath" class="card-img-top" alt="photo">
+                    <div class="card-body mt-2 m-auto">
+                        <h5 class="card-title">@book.Name</h5>
+                        <p class="card-text">Автор : @book.Autor</p>
+                        <p class="list-text mt-auto"> Статус : @book.Status</p>
+                    </div>
+                    <div class="card-footer border-0 bg-transparent text-center px-0">
+                        <a asp-action="Give" asp-controller="Account" asp-route-id="@book.Id" class="btn btn-warning" role="button">Сдать</a>
+                        <a asp-action="Book" asp-controller="Book" asp-route-id="@book.Id" class="btn btn-warning" role="button">Детали</a>
+                    </div>
+                </div>
+            }
+        }
+        
+    </div>
+    <div class="row">
+        <div class="col col-4 mx-auto mt-3 text-center">
+            @if (Model.PageViewModel.HasPreviousPage)
+            { <a class="btn btn-primary me-4" asp-action="Cabinet" asp-route-page="@(Model.PageViewModel.PageNumber - 1)"> Предыдущий </a> }
+            @if (Model.PageViewModel.HasNextPage)
+            { <a class="btn btn-primary ms-4" asp-action="Cabinet" asp-route-page="@(Model.PageViewModel.PageNumber + 1)">Следующий</a> }
+        </div>
+    </div>
+    
+</div>

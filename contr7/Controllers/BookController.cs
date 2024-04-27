@@ -30,6 +30,10 @@ public class BookController : Controller
         return View(bivm);
     }
 
+    public IActionResult Given()
+    {
+        return View();
+    }
     public IActionResult Create()
     {
         ViewBag.Categories = _context.Categories.ToList();

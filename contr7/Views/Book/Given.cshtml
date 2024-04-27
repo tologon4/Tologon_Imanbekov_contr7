@@ -7,6 +7,44 @@
 
 <h2>Книги</h2>
 <div class="container-xxl">
+    <div class="row row-cols-2">
+        <div class="col col-6 mt-5">
+            <h3 class="list-title text-start">Сортировка </h3>
+            <button class="btn btn-outline-secondary dropdown-toggle mt-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">Сортировать</button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" asp-action="Given" asp-route-sortOrder="@ViewBag.NameSort">По названию</a></li>
+                <li><a class="dropdown-item" asp-action="Given" asp-route-sortOrder="@ViewBag.AutorSort">По названию автору</a></li>
+                <li><a class="dropdown-item" asp-action="Given" asp-route-sortOrder="@ViewBag.StatusSort">По названию статусу</a></li>
+            </ul>
+        </div>
+        
+        <div class="col col-6">
+            <form asp-action="Index" method="get" class="mb-4">
+                <div class="col-md-3 mb-2">
+                    <label for="name" class="form-label">Название:</label>
+                    <input type="text" id="name" name="name" class="form-control">
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label for="autor" class="form-label">Автор:</label>
+                    <input type="text" id="wordFilter" name="autor" class="form-control" placeholder="Поиск по описанию">
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label for="status" class="form-label">Статус</label>
+                    <select id="status" name="status" class="form-select">
+                        <option value="">Все статусы</option>
+                        @foreach (var status in ViewBag.Statuses)
+                        {
+                            <option value="@status">@status</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary my-2">Применить фильтр</button>
+            </form>
+                    
+        </div>
+        
+    </div>
+    
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mt-5">
         @if (@Model.Orders.Count() == 0)
         {
@@ -34,10 +72,14 @@
     <div class="row">
         <div class="col col-4 mx-auto mt-3 text-center">
             @if (Model.PageViewModel.HasPreviousPage)
-            { <a class="btn btn-primary me-4" asp-action="Index" asp-route-page="@(Model.PageViewModel.PageNumber - 1)"> Предыдущий </a> }
+            {
+                <a class="btn btn-primary me-4" asp-action="Index" asp-route-page="@(Model.PageViewModel.PageNumber - 1)"> Предыдущий </a>
+            }
             @if (Model.PageViewModel.HasNextPage)
-            { <a class="btn btn-primary ms-4" asp-action="Index" asp-route-page="@(Model.PageViewModel.PageNumber + 1)">Следующий</a> }
+            {
+                <a class="btn btn-primary ms-4" asp-action="Index" asp-route-page="@(Model.PageViewModel.PageNumber + 1)">Следующий</a>
+            }
         </div>
     </div>
-    
+
 </div>

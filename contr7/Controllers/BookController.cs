@@ -48,7 +48,35 @@ public class BookController : Controller
         return View(book);
     }
 
-    public IActionResult Book(int? id)
+    public IActionResult Edit(int id)
+    {
+        return View(_context.Books.FirstOrDefault(b => b.Id == id));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(Book? book, IFormFile? uploadedFile)
+    {
+        book.AddedDate = book.AddedDate.Value.ToUniversalTime();
+        if (ModelState.IsValid)
+        {
+            if (uploadedFile != null)
+            {
+                string newFileName = Path.ChangeExtension(book.Name.Trim(), Path.GetExtension(uploadedFile.FileName));
+                string path= "/imageFile/" + newFileName.Trim();
+                using (var fileStream = new FileStream(_environment.WebRootPath + path, FileMode.Create))
+                {
+                    await uploadedFile.CopyToAsync(fileStream);
+                }
+                book.ImagePath = path;
+            }
+            _context.Books.Update(book);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        return View(book);
+    }
+
+    public IActionResult Book(int id)
     {
         return View(_context.Books.FirstOrDefault(b => b.Id == id));
     }

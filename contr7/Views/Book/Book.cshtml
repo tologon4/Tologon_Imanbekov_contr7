@@ -15,11 +15,17 @@
                 <p class="list-text mt-auto">@Model.Name</p>
                 <p class="list-text mt-auto">Автор : @Model.Autor</p>
                 <p class="list-text mt-auto">Статус : @Model.Status</p>
+                <p class="list-text mt-auto">Год выпуска : @Model.ReleaseYear</p>
+                <p class="list-text mt-auto">Время добавления : @Model.AddedDate</p>
+            </div>
+            <div class="card-footer border-0 bg-transparent text-center px-0">
+                <div class="card-footer border-0 bg-transparent text-center px-0">
+                    <a asp-controller="Book" asp-action="Edit" asp-route-id="@Model.Id" type="button" class="btn btn-warning rounded-0 px-3 py-2 ">Редактировать</a>
+                </div>
             </div>
         </div>
     </div>
     <div class="col">
-        
     </div>
 </div>
 

@@ -30,9 +30,22 @@ public class BookController : Controller
         return View(bivm);
     }
 
-    public IActionResult Given()
+    public IActionResult Given(int page=1)
     {
-        return View();
+        List<Book> books = new List<Book>();
+        List<Order> orders = _context.Orders.Include(u => u.User).Include(b => b.Book).ToList();
+        foreach (var order in orders)
+            books.Add(order.Book);   
+        int pageSize = 2;
+        int count = books.Count();
+        var items = books.Skip((page - 1) * pageSize).Take(pageSize);
+        PageViewModel pvm = new PageViewModel(count, page, pageSize);
+        BookGaveIndexViewModel bivm = new BookGaveIndexViewModel()
+        {
+            PageViewModel = pvm,
+            Orders = orders
+        };
+        return View(bivm);
     }
     public IActionResult Create()
     {

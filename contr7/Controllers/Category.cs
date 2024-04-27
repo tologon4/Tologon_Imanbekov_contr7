@@ -13,6 +13,7 @@ public class Category : Controller
         _context = context;
     }
     // GET
+    [Authorize(Roles = "admin")] 
     public IActionResult Delete(int id)
     {
         _context.Categories.Remove(_context.Categories.FirstOrDefault(c => c.Id == id));

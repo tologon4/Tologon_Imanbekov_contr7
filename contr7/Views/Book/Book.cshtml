@@ -1,0 +1,25 @@
+@model Book
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="row row-cols-2">
+    <div class="col ">
+        <div class="card h-100 text-start px-1 pt-1 border-0 bg-light ">
+            <div class="my-auto mx-auto w-50">
+                <img src="@Model.ImagePath" alt="person3-photo" class="w-100 img-fluid">
+            </div>
+            <div class="mx-2 my-auto">
+                <p class="list-text mt-auto">@Model.Name</p>
+                <p class="list-text mt-auto">Автор : @Model.Autor</p>
+                <p class="list-text mt-auto">Статус : @Model.Status</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        
+    </div>
+</div>
+

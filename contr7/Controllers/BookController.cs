@@ -47,4 +47,9 @@ public class BookController : Controller
         }
         return View(book);
     }
+
+    public IActionResult Book(int? id)
+    {
+        return View(_context.Books.FirstOrDefault(b => b.Id == id));
+    }
 }

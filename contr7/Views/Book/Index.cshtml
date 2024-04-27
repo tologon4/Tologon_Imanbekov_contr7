@@ -27,7 +27,8 @@
                             <p class="list-text mt-auto">Статус : @book.Status</p>
                         </div>
                         <div class="card-footer border-0 bg-transparent text-center px-0">
-                            </div>
+                             <a asp-controller="Book" asp-action="Book" asp-route-id="@book.Id" type="button" class="btn btn-warning rounded-0 px-3 py-2 ">Детали</a>
+                        </div>
                     </div>
                 </div>
             }
